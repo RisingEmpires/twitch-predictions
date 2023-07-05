@@ -64,6 +64,7 @@
     "react": "*",
     "react-dom": "*",
     "ts-node": "*",
+    "twitch-api-ts": "^0.1.2",
     "use-nodecg": "^0.4.1-2"
   },
   "devDependencies": {

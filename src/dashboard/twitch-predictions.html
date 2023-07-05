@@ -12,12 +12,34 @@
 			font-family: monospace;
 		}
 
+		.predictionTimeRemaining {
+			text-align: center;
+		}
+
 		.predictionOptions {
 			display: flex;
+			justify-content: center;
+		}
+
+		
+		.predictionOptions h1{
+			margin: auto;
 		}
 
 		.predictionOption {
-			width: 33%;
+			width: 45%;
+			padding: 0 5%;
+			text-align: center;
+		}
+
+		.debugButton {
+			top:0px;
+			right:0px;
+			position: absolute;
+		}
+
+		.predictionOption button{
+			width: 100%;
 			border: none;
 			background-color: #414ba5;
 			border-radius: 8px;
@@ -31,10 +53,9 @@
 			text-shadow: 1px 1px 0 #565656;
 			text-align: center;
 			box-sizing: border-box;
-			margin: 8px 0;
 		}
 
-		.predictionOption:hover { 
+		.predictionOption button:hover { 
 			background-color: #4341a5;
 		}
 

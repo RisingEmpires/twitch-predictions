@@ -12,6 +12,13 @@ export function TwitchPredictions() {
 	const [leftButtonOption, set_leftButtonOption] = useReplicant<PredictionButton>('leftButtonOption', { id: '', title: '' });
 	const [rightButtonOption, set_rightButtonOption] = useReplicant<PredictionButton>('rightButtonOption', { id: '', title: '' });
 
+	const [leftPoints, set_leftPoints] = useReplicant<number>('leftPoints', 0);
+	const [rightPoints, set_rightPoints] = useReplicant<number>('rightPoints', 0);
+
+	const [predictionTimeRemaining, set_predictionTimeRemaining] = useReplicant<string>('predictionTimeRemaining', '');
+
+	const [isOpen, setIsOpen] = useState(false);
+
 	function startPrediction() {
 		//@ts-ignore
 		nodecg.sendMessage('startPrediction', 'testing')
@@ -32,15 +39,34 @@ export function TwitchPredictions() {
 		nodecg.sendMessage('endPrediction', option)
 	}
 
+	function toggle() {
+		setIsOpen((isOpen) => !isOpen);
+	}
+
 	return (
 		<>
-			<p>twitchActivePredictionID {twitchActivePredictionID}<input type="checkbox" checked={twitchPredictionActive} /></p>
-			<button className='twitch' onClick={getPrediction}>Debug Option Get Prediction</button>
+			<button className='debugButton' onClick={toggle}>Show Debug Options</button>
+			{isOpen ?
+				<div className='debugOptions'>
+					<p>twitchActivePredictionID {twitchActivePredictionID}<input type="checkbox" checked={twitchPredictionActive} /></p>
+					<button className='twitch' onClick={getPrediction}>Debug Option Get Prediction</button>
+					<input type="number" value={leftPoints ?? 0} onChange={(newValue) => set_leftPoints(newValue.target.value as unknown as number)} />
+					<input type="number" value={rightPoints ?? 0} onChange={(newValue) => set_rightPoints(newValue.target.value as unknown as number)} />
+				</div> : <></>
+			}
 			{twitchPredictionActive ?
 				<div>
+					<h1 className='predictionTimeRemaining'>{predictionTimeRemaining}</h1>
 					<div className='predictionOptions'>
-						<button className='predictionOption' onClick={() => endPrediction(leftButtonOption)}>{leftButtonOption?.title || ''}</button>
-						<button className='predictionOption' onClick={() => endPrediction(rightButtonOption)}>{rightButtonOption?.title || ''}</button>
+						<div className='predictionOption'>
+							<h1>{leftPoints}</h1>
+							<button className='predictionOption' onClick={() => endPrediction(leftButtonOption)}>{leftButtonOption?.title || ''}</button>
+						</div>
+						<h1>{(leftPoints / (+leftPoints + +rightPoints) * 100).toFixed(2)}%</h1>
+						<div className='predictionOption'>
+							<h1>{rightPoints}</h1>
+							<button className='predictionOption' onClick={() => endPrediction(rightButtonOption)}>{rightButtonOption?.title || ''}</button>
+						</div>
 					</div>
 					<button className='cancel' onClick={cancelPrediction}>Force Cancel Prediction</button>
 				</div>
