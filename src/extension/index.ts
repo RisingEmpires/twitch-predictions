@@ -8,8 +8,7 @@ module.exports = function (nodecg: NodeCG.ServerAPI) {
 	const leftName = nodecg.Replicant('leftName', 'aoe-4-civ-draft')
 	const rightName = nodecg.Replicant('rightName', 'aoe-4-civ-draft')
 
-	const leftScore = nodecg.Replicant('leftScore', 'score-display') as unknown as number
-	const rightScore = nodecg.Replicant('rightScore', 'score-display') as unknown as number
+
 
 	const twitchPredictionLength = nodecg.Replicant('twitchPredictionLength', 'twitch-predictions') as unknown as number
 	const twitchPredictionActive = nodecg.Replicant('twitchPredictionActive', 'twitch-predictions')
@@ -94,11 +93,11 @@ module.exports = function (nodecg: NodeCG.ServerAPI) {
 	nodecg.listenFor('startPrediction', async (_val, ack) => {
 		nodecg.log.info('Create Prediction');
 
-		//@ts-ignore
-		console.log(twitchPredictionLength._value)
+		const leftScore = nodecg.Replicant('leftScore', 'aoe4-score-display')
+		const rightScore = nodecg.Replicant('rightScore', 'aoe4-score-display')
 
-		//@ts-ignore
 		//Score of players + 1 is the game we're playing
+		//@ts-ignore
 		let game = leftScore.value + rightScore.value + 1
 
 		let body = {
@@ -161,13 +160,10 @@ module.exports = function (nodecg: NodeCG.ServerAPI) {
 		})
 			.then((res) => {
 				status = res.status;
-				console.log(res.headers.get('Ratelimit-Limit'))
-				console.log(res.headers.get('Ratelimit-Remaining'))
 				return res.json()
 			})
 			.then((jsonResponse) => {
 				_json = jsonResponse.data[0]
-				console.log(_json)
 
 			})
 			.catch((err) => {
@@ -179,12 +175,12 @@ module.exports = function (nodecg: NodeCG.ServerAPI) {
 
 	function updatePrediction() {
 		console.log("Updating prediction")
-		console.log(Date.now())
-		console.log(_json.created_at)
-		console.log(Date.parse(_json.created_at))
-		console.log(_json.prediction_window)
-		console.log(_json.prediction_window * 1000)
-		console.log(Date.parse(_json.created_at) + _json.prediction_window)
+		//console.log(Date.now())
+		//console.log(_json.created_at)
+		//console.log(Date.parse(_json.created_at))
+		//console.log(_json.prediction_window)
+		//console.log(_json.prediction_window * 1000)
+		//console.log(Date.parse(_json.created_at) + _json.prediction_window)
 
 		let _prediction_window = _json.prediction_window * 1000
 		
